@@ -1,6 +1,6 @@
-# y
+# vue template
 
-> y
+> vue template
 
 ## Build Setup
 
