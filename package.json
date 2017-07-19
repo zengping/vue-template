@@ -1,12 +1,12 @@
 {
-  "name": "fz",
+  "name": "vue template",
   "version": "1.0.0",
   "description": "A Vue.js project",
   "author": "zengping <331962716@qq.com>",
   "private": true,
   "scripts": {
     "dev": "node build/copy.js && node build/dev-server.js",
-    "start": "node build/dev-server.js",
+    "start": "node build/copy.js && node build/dev-server.js",
     "build": "node build/build.js",
     "lint": "eslint --ext .js,.vue src"
   },
