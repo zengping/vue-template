@@ -1,24 +1,47 @@
-require('./check-versions')()
-
-process.env.NODE_ENV = 'production'
-
 var ora = require('ora')
 var rm = require('rimraf')
+var fs = require('fs')
 var path = require('path')
 var chalk = require('chalk')
-var webpack = require('webpack')
-var config = require('../config')
-var webpackConfig = require('./webpack.copy.conf')
 
-var spinner = ora('copy the assets...')
+var spinner = ora('copy the assets...\n\n\n')
 spinner.start()
-
-webpack(webpackConfig, function (err, stats) {
-  spinner.stop()
-  console.log(chalk.cyan('  assets copy complete.\n'))
-
-  rm(__dirname + '/../app.js', err => {
-    if (err) throw err
-    console.log(chalk.cyan('  app.js delete complete.\n'))
-  })
+rm('./static/assets', err => {
+  if (err) throw err
+  console.log(chalk.cyan('  static delete complete.\n'))
+  travel('./demo/assets', './static/assets', 1)
 })
+
+function copy(src, dst) {
+  fs.createReadStream(src).pipe(fs.createWriteStream(dst))
+}
+
+function travel(dir, todir, level) {
+  fs.stat(todir, function (err2, stats) {
+    if (err2) fs.mkdirSync(todir)
+    fs.readdir(dir, function (err, files) {
+      if (err) {
+        throw err
+      } else {
+        if (files.length > 0) {
+          files.forEach(o => {
+            var pathname = path.join(dir, o)
+            var topath = path.join(todir, o)
+
+            fs.stat(pathname, function (err1, stats) {
+              if (stats.isDirectory()) {
+                travel(pathname, topath, level + 1)
+              } else {
+                copy(pathname, topath)
+              }
+            })
+          })
+          if (level === 1) {
+            spinner.stop()
+            console.log(chalk.cyan('  assets copy complete.\n'))
+          }
+        }
+      }
+    })
+  })
+}
