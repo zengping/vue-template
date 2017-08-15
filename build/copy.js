@@ -8,7 +8,7 @@ var spinner = ora('copy the assets...\n\n\n')
 spinner.start()
 rm('./static/assets', err => {
   if (err) throw err
-  console.log(chalk.cyan('  static delete complete.\n'))
+  console.log(chalk.cyan('  old assets delete success.\n'))
   travel('./demo/assets', './static/assets', 1)
 })
 
@@ -38,7 +38,7 @@ function travel(dir, todir, level) {
           })
           if (level === 1) {
             spinner.stop()
-            console.log(chalk.cyan('  assets copy complete.\n'))
+            console.log(chalk.cyan('  new assets copy complete.\n'))
           }
         }
       }
